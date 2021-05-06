@@ -47,13 +47,11 @@ lib
 └── ImpalaJDBC42.jar
 ```
 
-Build:
-
+### Build Impala Driver
 ```
-make install-local-jar
-make build
+cd /path/to/metabase/
+bin/build-driver.sh impala
 ```
-
 get driver from `target/uberjar/impala.metabase-driver.jar`
 
 ### Dev
