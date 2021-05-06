@@ -6,7 +6,7 @@ Clone code in metabase drivers folder.
 ```
 cd /path/to/metabase/modules/drivers
 
-git clone https://github.com/XUJiahua/metabase-impala-driver.git impala
+git clone https://github.com/annisun2020/metabase-impala-driver.git impala
 ```
 
 Download impala JDBC driver from [Cloudera](https://www.cloudera.com/downloads/connectors/impala/jdbc/2-6-17.html)
