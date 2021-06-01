@@ -246,13 +246,13 @@
 ;; Impala JDBC42 Driver seems have issue: PreparedStatement.setObject not work on LocalDateTime
 ;; [Cloudera][JDBC](11500) Given type does not match given object: 2020-07-08T00:00.
 ;; Need to register driver like this.
-;; (driver/register! :impala, :parent #{:sql-jdbc ::legacy/use-legacy-classes-for-read-and-set})
-;(defmethod sql-jdbc.execute/set-parameter [:impala LocalDateTime]
-;  [_ ^PreparedStatement ps ^Integer i t]
-;  (let [t (t/sql-timestamp t)]
-;    (printf "(.setTimestamp %d ^%s %s)" i (.getName (class t)) (pr-str t))
-;    (.setTimestamp ps i t)))
-;
+(driver/register! :impala, :parent #{:sql-jdbc ::legacy/use-legacy-classes-for-read-and-set})
+(defmethod sql-jdbc.execute/set-parameter [:impala LocalDateTime]
+  [_ ^PreparedStatement ps ^Integer i t]
+  (let [t (t/sql-timestamp t)]
+    (printf "(.setTimestamp %d ^%s %s)" i (.getName (class t)) (pr-str t))
+    (.setTimestamp ps i t)))
+
 ;; Impala doesn't support DATEs so convert it to a DATETIME first
 (defmethod sql-jdbc.execute/set-parameter [:impala LocalDate]
   [driver ps i t]
