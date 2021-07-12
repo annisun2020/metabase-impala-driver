@@ -195,10 +195,7 @@
 
 (defmethod sql.qp/date [:impala :week]
   [_ _ expr]
-  (hsql/call :date_sub
-             (hx/+ (hx/->timestamp expr)
-                   (hsql/raw "interval 1 day"))
-             (hsql/call :dayofweek (hx/->timestamp expr))))
+  (hsql/call :trunc (hx/->timestamp expr) (hx/literal :day)))
 
 (defmethod sql.qp/date [:impala :quarter]
   [_ _ expr]
