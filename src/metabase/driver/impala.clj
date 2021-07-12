@@ -199,11 +199,7 @@
 
 (defmethod sql.qp/date [:impala :quarter]
   [_ _ expr]
-  (hsql/call :add_months
-             (hsql/call :trunc (hx/->timestamp expr) (hx/literal :year))
-             (hx/* (hx/- (hsql/call :quarter (hx/->timestamp expr))
-                         1)
-                   3)))
+  (hsql/call :trunc (hx/->timestamp expr) (hx/literal :Q)))
 
 (defmethod sql.qp/->honeysql [:impala :replace]
   [driver [_ arg pattern replacement]]
