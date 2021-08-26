@@ -249,7 +249,7 @@
 ;; Impala doesn't support DATEs so convert it to a DATETIME first
 (defmethod sql-jdbc.execute/set-parameter [:impala LocalDate]
   [driver ps i t]
-  (sql-jdbc.execute/set-parameter driver ps i (t/format "yyyy-MM-dd hh:mm:ss" (t/local-date-time t (t/local-time 0)))))
+  (sql-jdbc.execute/set-parameter driver ps i (t/format "yyyy-MM-dd" (t/local-date-time t (t/local-time 0)))))
 
 (defmethod sql-jdbc.execute/read-column-thunk [:impala Types/TIMESTAMP]
   [_ ^ResultSet rs rsmeta ^Integer i]
