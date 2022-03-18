@@ -41,10 +41,37 @@
   "t1")
 
 ;; use `source-table-alias` for the source Table, e.g. `t1.field` instead of the normal `schema.table.field`
-(defmethod sql.qp/->honeysql [:impala (class Field)]
+;; Changes in Metabase 0.42.0 affect drivers that derive from `:sql` (including `:sql-jdbc`).
+;; Non-SQL drivers likely will require no changes.
+
+;; 0.42.0 introduces several significant changes to the way the SQL query processor compiles and determines aliases for
+;; MBQL `:field` clauses. For more background, see pull request
+;; [#19384](https://github.com/metabase/metabase/pull/19384).
+
+;; If you were manipulating Field or Table aliases, we consolidated a lot of overlapping vars and methods, which means you may need to delete deprecated method implementations.
+
+;; ### Significant changes
+
+;; - The `metabase.driver.sql.query-processor/->honeysql` method for Field instances, e.g.
+
+;;   ```clj
+;;   (defmethod sql.qp/->honeysql [:my-driver (class Field)]
+;;     [driver field]
+;;     ...)
+;;   ```
+
+;;   is no longer invoked. All compilation is now handled by the MBQL `:field` clause method, e.g.
+
+;;   ```clj
+;;   (defmethod sql.qp/->honeysql [:my-driver :field]
+;;     [driver field-clause]
+;;     ...)
+;;   ```
+
+(defmethod sql.qp/->honeysql [:impala :field]
   [driver field]
   (binding [sql.qp/*table-alias* (or sql.qp/*table-alias* source-table-alias)]
-    ((get-method sql.qp/->honeysql [:sql-jdbc (class Field)]) driver field)))
+    ((get-method sql.qp/->honeysql [:sql-jdbc :field]) driver field)))
 
 (defmethod sql.qp/apply-top-level-clause [:impala :page] [_ _ honeysql-form {{:keys [items page]} :page}]
   (let [offset (* (dec page) items)]
